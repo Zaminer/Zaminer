@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
-const port = 3000
-const hostname = 'localhost';
+const port = 2604
+const hostname = 'chatservice.informatik.htl-vil';
 
 app.use(express.json());
 
@@ -10,5 +10,6 @@ app.get('/helloExpress', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://${hostname}:${port}/helloExpress`)
+  console.log(`Chat app listening at http://${hostname}:${port}/helloExpress`)
+
 })
