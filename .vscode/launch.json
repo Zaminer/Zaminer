@@ -14,7 +14,7 @@
             "name": "Chrome",
             "request": "launch",
             "type": "pwa-chrome",
-            "url": "chatservice.informatik.htl-vil:2604",
+            "url": "http://chatservice.informatik.htl-vil:2604/helloExpress",
             "webRoot": "${workspaceFolder}"
         },
         {
