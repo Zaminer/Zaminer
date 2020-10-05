@@ -16,9 +16,8 @@ app.use(express.json());
 app.use((req, res, next) => {
   let msg = `${formatDate()} ${req.method} ${req.url}`;
   res.msg = msg;
-  //console.log(`${formatDate()}`);
-  //res.status(403).send("canceled");
-  next(); // als parameter weitergeben
+  
+  next(); 
 })
 
 app.use((req, res, next) => {
