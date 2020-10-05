@@ -10,7 +10,7 @@
         }
     ],
     "configurations": [
-        {
+        {                                                                                                        
             "name": "Chrome",
             "request": "launch",
             "type": "pwa-chrome",
