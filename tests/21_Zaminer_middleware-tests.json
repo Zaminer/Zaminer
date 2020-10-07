@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "f76cd6c8-55cb-44df-a017-9a0d30d9bde1",
+		"name": "Middlewaretests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Dummy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e629b8de-db88-4104-802a-20bc9fdb0b71",
+						"exec": [
+							"pm.test(\"Status code is 404\", function(){\r",
+							"    pm.response.to.have.status(404);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "chatservice.informatik.htl-vil:2604/whoiam",
+					"host": [
+						"chatservice",
+						"informatik",
+						"htl-vil"
+					],
+					"port": "2604",
+					"path": [
+						"whoiam"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b223f040-fde6-4a7d-ac18-16d543eeaebf",
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{\"username\":\"Andi\", \"password\":\"Russ\"}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "chatservice.informatik.htl-vil:2604/whoiam",
+					"host": [
+						"chatservice",
+						"informatik",
+						"htl-vil"
+					],
+					"port": "2604",
+					"path": [
+						"whoiam"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Wrong format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f8aaef32-1e60-4e34-9dee-a2f31ab379ac",
+						"exec": [
+							"pm.test(\"Status code is 401\", function(){\r",
+							"    pm.response.to.have.status(401);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{\"Weißbier\":\"d\", \"mit Hopfen\":\"1234\"}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "chatservice.informatik.htl-vil:2604/helloExpress",
+					"host": [
+						"chatservice",
+						"informatik",
+						"htl-vil"
+					],
+					"port": "2604",
+					"path": [
+						"helloExpress"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "access Denied",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a92e7803-669e-49e3-ac54-2af7d819ce19",
+						"exec": [
+							"pm.test(\"Status code is 401\", function(){\r",
+							"    pm.response.to.have.status(401);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{\"username\":\"Arrrrrrtl\", \"password\":\"123\"}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "chatservice.informatik.htl-vil:2604/whoiam",
+					"host": [
+						"chatservice",
+						"informatik",
+						"htl-vil"
+					],
+					"port": "2604",
+					"path": [
+						"whoiam"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
