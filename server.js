@@ -1,12 +1,12 @@
+/* ************************************************************************************** */
+/*                             Chat App                                                   */
+/*                                                                                        */
+/*    Zaminer Marco                                                                       */
+/*    2020/21                                                                             */
+/* ************************************************************************************** */
+
 
 const { json } = require('express');
-/*************************************************************************************** */
-/*                            Chat App                                                   */
-/*                                                                                       */
-/*   Zaminer Marco                                                                       */
-/*   2020/21                                                                             */
-/*************************************************************************************** */
-
 const express = require('express')
 const app = express()
 const port = 2604
@@ -20,55 +20,48 @@ const allowedUsers = [
   { "username":"kant", "password":"aufklaerung" } 
 ];
 
-app.use(express.json());
 
+app.use(express.json());
+app.use((req, res, next) => {
+  let msg = `${formatDate()} ${req.method} ${req.url}`;
+  req.msg = msg;
+  next(); 
+})
 app.use((req, res, next) => {
   try{
     let credentials = JSON.parse(req.headers.authorization);
     if(credentials.username && credentials.password && credentials.length != 2){
       if(checkCredentials(credentials)){         
-        res.status(200);
-        res.statusMessage = "Hello " + credentials.username;  
-        next();
+        setStatus(res, 200, "Hello " + credentials.username);   
+        next();    
       }
       else{
-        res.status(401);
-        res.statusMessage = "Access denied";
+        res.status(401).send("Access denied - unauthorized user");      
       }
     }
     else{
-      res.status(401);
-      res.statusMessage = "Access denied";
+      res.status(401).send("Access denied - wrong format");
     }
-    next();
   } catch(ex){    
-    res.status(404).send('NOT FOUND');
+    res.status(401).send("Access denied - wrong format");
   }
 })
-
-app.use((req, res, next) => {
-  let msg = `${formatDate()} ${req.method} ${req.url} ${res.statusCode}-${res.statusMessage}`;
-  req.msg = msg;
-  
-  next(); 
-})
-
 app.use((req, res, next) => {
   console.log(req.msg);
   next();
 })
 
+
 app.get('/whoiam', (req, res) => {
   res.send(res.statusMessage);
 })
-
 app.get('/helloExpress', (req, res) => {
   res.send('Hello World! Express up and running')
 })
-
 app.listen(port, () => {
   console.log(`Chat app listening at http://${hostname}:${port}/`)
 })
+
 
 function formatDate(){
   var stunden, minuten, sekunden;
@@ -88,7 +81,6 @@ function formatDate(){
   zeit = stunden + minuten + sekunden + " Uhr";
   return zeit;
 }
-
 function checkCredentials(credentials){
   if(allowedUsers.some(n => {
     return (n.username == credentials.username && n.password == credentials.password);
@@ -96,4 +88,7 @@ function checkCredentials(credentials){
     return true;
   return false;
 }
-
+function setStatus(res, code, message){
+  res.status(code);
+  res.statusMessage = message;
+}
