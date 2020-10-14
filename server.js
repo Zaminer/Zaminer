@@ -6,7 +6,7 @@
 /* ************************************************************************************** */
 
 
-const { json } = require('express');
+const fs = require('fs');
 const express = require('express')
 const app = express()
 const port = 2604
@@ -22,38 +22,11 @@ const allowedUsers = [
 
 
 app.use(express.json());
-app.use((req, res, next) => {
-  let msg = `${formatDate()} ${req.method} ${req.url}`;
-  req.msg = msg;
-  next(); 
-})
-app.use((req, res, next) => {
-  try{
-    let credentials = JSON.parse(req.headers.authorization);
-    if(credentials.username && credentials.password && credentials.length != 2){
-      if(checkCredentials(credentials)){         
-        setStatus(res, 200, "Hello " + credentials.username);   
-        next();    
-      }
-      else{
-        res.status(401).send("Access denied - unauthorized user");      
-      }
-    }
-    else{
-      res.status(401).send("Access denied - wrong format");
-    }
-  } catch(ex){    
-    res.status(401).send("Access denied - wrong format");
-  }
-})
-app.use((req, res, next) => {
-  console.log(req.msg);
-  next();
-})
-
+app.use(logging);
+app.use(authenticate);
 
 app.get('/whoiam', (req, res) => {
-  res.send(res.statusMessage);
+  res.send(req.user);
 })
 app.get('/helloExpress', (req, res) => {
   res.send('Hello World! Express up and running')
@@ -61,6 +34,46 @@ app.get('/helloExpress', (req, res) => {
 app.listen(port, () => {
   console.log(`Chat app listening at http://${hostname}:${port}/`)
 })
+
+
+
+function logging (req, res, next) {
+  let logger = fs.createWriteStream('debug.log.md');
+  let msg = `${formatDate()} ${req.method} ${req.url}`;
+  req.msg = msg;
+  startLog();
+  log();
+  printReqMsg(req, res, next); 
+}
+function authenticate (req, res, next) {
+  let credentials = req.headers.authorization;
+
+  if(credentials == undefined){
+    res.status(401).send("Access denied. Provide a authorization header");
+    return;
+  }
+
+  try{
+    credentials = JSON.parse(credentials);
+  } catch (ex){
+    res.status(401).send("Access denied. Provide authorization header in JSON-Format");
+    return;
+  }
+
+  if(Object.keys(credentials).length !== 2 || !credentials.username || !credentials.password){
+    res.status(401).send("Access denied. Provide a valid credentials-object");
+    return;
+  }
+
+  if(!checkCredentials(credentials)){
+    res.status(401).send("Access denied. User does not exist");
+    return;
+  }
+
+  delete credentials.password;
+  req.user = credentials.username;
+  next();
+}
 
 
 function formatDate(){
@@ -91,4 +104,14 @@ function checkCredentials(credentials){
 function setStatus(res, code, message){
   res.status(code);
   res.statusMessage = message;
+}
+function printReqMsg (req, res, next) {
+  console.log(req.msg);
+  next();
+}
+function startLog(){
+
+}
+function log(msg, data, type){
+
 }
